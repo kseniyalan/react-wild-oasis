@@ -1,6 +1,10 @@
+import { useState } from "react";
 import styled from "styled-components";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import CreateCabinForm from "./CreateCabinForm";
+
+
 import { formatCurrency } from "../../utils/helpers";
 import { deleteCabin } from "../../services/apiCabins";
 
@@ -58,6 +62,7 @@ function CabinRow({ cabin }) {
   } = cabin;
 
   const queryClient = useQueryClient();
+  const [showForm, setShowForm] = useState(false);
 
   const { mutate, isLoading: isDeleting } = useMutation({
     mutationFn: deleteCabin,
@@ -87,15 +92,23 @@ function CabinRow({ cabin }) {
         ) : (
           <span>&mdash;</span>
         )}
-        <button
-          type="button"
-          disabled={isDeleting}
-          onClick={() => mutate(cabinId)}
-        >
-          Delete
-        </button>
+        <div>
+          <button
+            type="button"
+            onClick={() => setShowForm((showForm) => !showForm)}
+          >
+            Edit
+          </button>
+          <button
+            type="button"
+            disabled={isDeleting}
+            onClick={() => mutate(cabinId)}
+          >
+            Delete
+          </button>
+        </div>
       </TableRow>
-
+      {showForm && (<CreateCabinForm cabinToEdit={cabin} />)}
     </>
   );
 }
