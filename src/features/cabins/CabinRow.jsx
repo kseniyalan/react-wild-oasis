@@ -1,7 +1,8 @@
 import { useState } from "react";
 import styled from "styled-components";
 import CreateCabinForm from "./CreateCabinForm";
-
+import Modal from "../../ui/Modal";
+import ConfirmDelete from "../../ui/ConfirmDelete";
 
 import { formatCurrency } from "../../utils/helpers";
 import { useDeleteCabin } from "./useDeleteCabin";
@@ -87,27 +88,35 @@ function CabinRow({ cabin }) {
         ) : (
           <span>&mdash;</span>
         )}
-        <div>
-            <button
-                disabled={isCreating}
-                onClick={handleDuplicate}
-            >
-                <HiSquare2Stack />
-            </button> 
-            <button
-                type="button"
-                onClick={() => setShowForm((showForm) => !showForm)}
-            >
-                <HiPencil />
+      <div>
+        <button disabled={isCreating} onClick={handleDuplicate}>
+          <HiSquare2Stack />
+        </button>
+
+        <Modal>
+          <Modal.Open opens="edit">
+            <button>
+              <HiPencil />
             </button>
-            <button
-                type="button"
-                disabled={isDeleting}
-                onClick={() => deleteCabin(cabinId)}
-            >
-                <HiTrash />
+          </Modal.Open>
+          <Modal.Window name="edit">
+            <CreateCabinForm cabinToEdit={cabin} />
+          </Modal.Window>
+
+          <Modal.Open opens="delete">
+            <button>
+              <HiTrash />
             </button>
-        </div>
+          </Modal.Open>
+          <Modal.Window name="delete">
+            <ConfirmDelete
+              resourceName="cabins"
+              disabled={isDeleting}
+              onConfirm={() => deleteCabin(cabinId)}
+            />
+          </Modal.Window>
+        </Modal>
+      </div>
       </TableRow>
       {showForm && (<CreateCabinForm cabinToEdit={cabin} />)}
     </>
