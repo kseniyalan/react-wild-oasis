@@ -29,7 +29,7 @@ const { register, handleSubmit, reset, getValues, formState } = useForm({
         editCabin(
             { newCabinData: { ...data, image }, id: editId },
             {
-                onSuccess: (data) => {
+                onSuccess: () => {
                     reset();
                     onCloseModal?.();
                 },
@@ -39,7 +39,7 @@ const { register, handleSubmit, reset, getValues, formState } = useForm({
         createCabin(
             { ...data, image: image },
             {
-                onSuccess: (data) => {
+                onSuccess: () => {
                     reset();
                     onCloseModal?.();
                 },
@@ -49,7 +49,7 @@ const { register, handleSubmit, reset, getValues, formState } = useForm({
 }
 
   function onFormError(errors) {
-    // console.log(errors);
+    console.log(errors);
   }
 
   const isWorking = isCreating || isEditing;

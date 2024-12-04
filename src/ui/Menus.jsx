@@ -87,6 +87,11 @@ function Toggle({ id }) {
   const { openId, close, open, setPosition } = useContext(MenusContext);
 
   function handleClick(e) {
+    // Here we need the stopPropagation to prevent the second part of the bug:
+    // When menu is closed and we click on the toggle button, the menu will open and then  close immediately,
+    // because the click event will bubble up to the document and trigger the click outside event
+    e.stopPropagation();
+
     const rect = e.target.closest("button").getBoundingClientRect();
     setPosition({
       x: window.innerWidth - rect.width - rect.x,
@@ -105,7 +110,11 @@ function Toggle({ id }) {
 
 function List({ id, children }) {
   const { openId, position, close } = useContext(MenusContext);
-  const ref = useOutsideClick(close);
+
+  // Close menu when clicking outside
+  // Here we need false as the second argument to prevent the bug: when menu is open, and we click on the toggle button again,
+  // the menu will close (by click outside) and open again immediately
+  const ref = useOutsideClick(close, false);
 
   if (openId !== id) return null;
 
